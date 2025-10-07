@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký tài khoản</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .register-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 420px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      border-color: #185a9d;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(24, 90, 157, 0.15);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(24, 90, 157, 0.3);
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #555;
+    }
+
+    .login-link a {
+      color: #185a9d;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      color: #43cea2;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <h1>Đăng ký tài khoản</h1>
+    <form id="registerForm">
+      <label for="username">Tên đăng nhập</label>
+      <input type="text" id="username" required placeholder="Nhập tên đăng nhập">
+
+      <label for="password">Mật khẩu</label>
+      <input type="password" id="password" required placeholder="Nhập mật khẩu">
+
+      <label for="role">Vai trò</label>
+      <input type="text" id="role" placeholder="Ví dụ: ADMIN, USER" required>
+
+      <button type="submit">Đăng ký</button>
+    </form>
+
+    <div class="message" id="message"></div>
+
+    <div class="login-link">
+      Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+      const messageDiv = document.getElementById('message');
+
+      try {
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, role })
+        });
+
+        if (response.ok) {
+          messageDiv.style.color = 'green';
+          messageDiv.textContent = '✅ Đăng ký thành công! Đang chuyển hướng...';
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        } else {
+          messageDiv.style.color = 'red';
+          messageDiv.textContent = '❌ Đăng ký thất bại, vui lòng thử lại.';
+        }
+      } catch (error) {
+        messageDiv.style.color = 'red';
+        messageDiv.textContent = '⚠️ Không thể kết nối tới server.';
+      }
+    });
+  </script>
+
+</body>
+</html>
